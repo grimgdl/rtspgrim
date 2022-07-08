@@ -31,12 +31,19 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
         setContentView(view)
 
 
-        vlc = LibVLC(this)
+
+        val options = mutableListOf("-vvv")
+        options.add("--sout-transcode-vb=750")
+
+        vlc = LibVLC(this, options)
         val vlcVideoLayout = binding.videoLayout
         mediaPlayer = MediaPlayer(vlc)
 
 
         mediaPlayer.vlcVout.setVideoSurface(vlcVideoLayout.holder.surface,  vlcVideoLayout.holder)
+
+
+
 
         val ivlcVout = mediaPlayer.vlcVout
         ivlcVout.setWindowSize(1280, 760)
@@ -47,6 +54,7 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
             BuildConfig.USER, BuildConfig.PASS, BuildConfig.HOST, BuildConfig.PORT)
 
         val media = Media(vlc, Uri.parse(connectionData))
+
 
 
         mediaPlayer.media = media
