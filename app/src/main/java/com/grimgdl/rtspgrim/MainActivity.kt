@@ -1,7 +1,16 @@
 package com.grimgdl.rtspgrim
 
+import android.graphics.Insets
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.util.Size
+import android.view.WindowInsets
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.grimgdl.rtspgrim.databinding.MainActivityLayoutBinding
 import org.videolan.libvlc.LibVLC
@@ -16,6 +25,7 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
     private lateinit var vlc: LibVLC
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,8 +38,16 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
         val vlcVideoLayout = binding.videoLayout
         mediaPlayer = MediaPlayer(vlc)
 
+        mediaPlayer.vlcVout.setVideoSurface(vlcVideoLayout.holder.surface,  vlcVideoLayout.holder)
+        //mediaPlayer.vlcVout.attachViews()
 
-        mediaPlayer.attachViews(vlcVideoLayout, null, false,  false)
+
+        val ivlcVout = mediaPlayer.vlcVout
+        ivlcVout.setWindowSize(1280, 760)
+        ivlcVout.attachViews();
+
+
+
 
         val connectionData = String.format("rtsp://%s:%s@%s:%s/cam/realmonitor?channel=1&subtype=0",
             BuildConfig.USER, BuildConfig.PASS, BuildConfig.HOST, BuildConfig.PORT)
@@ -68,6 +86,23 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
         mediaPlayer.stop()
         mediaPlayer.detachViews()
 
+    }
+
+    fun WindowManager.currentWindowMetricsPointCompat(): Point {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val windowInsets = currentWindowMetrics.windowInsets
+            var insets: Insets = windowInsets.getInsets(WindowInsets.Type.navigationBars())
+            windowInsets.displayCutout?.run {
+                insets = Insets.max(insets, Insets.of(safeInsetLeft, safeInsetTop, safeInsetRight, safeInsetBottom))
+            }
+            val insetsWidth = insets.right + insets.left
+            val insetsHeight = insets.top + insets.bottom
+            Point(currentWindowMetrics.bounds.width() - insetsWidth, currentWindowMetrics.bounds.height() - insetsHeight)
+        }else{
+            Point().apply {
+                defaultDisplay.getSize(this)
+            }
+        }
     }
 
 
