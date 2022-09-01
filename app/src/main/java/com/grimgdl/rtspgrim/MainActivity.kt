@@ -11,10 +11,9 @@ import com.grimgdl.rtspgrim.databinding.MainActivityLayoutBinding
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
-import org.videolan.libvlc.interfaces.IVLCVout
 
 
-class MainActivity: AppCompatActivity(), IVLCVout.Callback {
+class MainActivity: AppCompatActivity() {
 
 
     private lateinit var mediaPlayer : MediaPlayer
@@ -27,9 +26,7 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
         super.onCreate(savedInstanceState)
 
         val binding = MainActivityLayoutBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
+        setContentView(binding.root)
 
 
         val options = mutableListOf("-vvv")
@@ -41,8 +38,6 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
 
 
         mediaPlayer.vlcVout.setVideoSurface(vlcVideoLayout.holder.surface,  vlcVideoLayout.holder)
-
-
 
 
         val ivlcVout = mediaPlayer.vlcVout
@@ -66,7 +61,6 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
                 binding.bitrate.text = it.lengthChanged.toString()
             }
 
-
         }
 
 
@@ -77,13 +71,6 @@ class MainActivity: AppCompatActivity(), IVLCVout.Callback {
 
     }
 
-    override fun onSurfacesCreated(vlcVout: IVLCVout?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSurfacesDestroyed(vlcVout: IVLCVout?) {
-        TODO("Not yet implemented")
-    }
 
 
     override fun onDestroy() {
