@@ -32,6 +32,9 @@ class MainActivity: AppCompatActivity() {
         val options = mutableListOf("-vvv")
         options.add("--sout-transcode-vb=750")
 
+        options.add(String.format("--rtsp-user=%s", BuildConfig.USER))
+        options.add(String.format("--rtsp-pwd=%s", BuildConfig.PASS))
+
         vlc = LibVLC(this, options)
         val vlcVideoLayout = binding.videoLayout
         mediaPlayer = MediaPlayer(vlc)
@@ -41,12 +44,12 @@ class MainActivity: AppCompatActivity() {
 
 
         val ivlcVout = mediaPlayer.vlcVout
-        ivlcVout.setWindowSize(1280, 760)
+        ivlcVout.setWindowSize(1280, 720)
         ivlcVout.attachViews()
 
 
-        val connectionData = String.format("rtsp://%s:%s@%s:%s/cam/realmonitor?channel=1&subtype=0",
-            BuildConfig.USER, BuildConfig.PASS, BuildConfig.HOST, BuildConfig.PORT)
+        val connectionData = String.format("rtsp://%s:%s/cam/realmonitor?channel=1&subtype=0",
+             BuildConfig.HOST, BuildConfig.PORT)
 
         val media = Media(vlc, Uri.parse(connectionData))
 
