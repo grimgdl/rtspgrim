@@ -1,0 +1,30 @@
+[versions]
+agp="8.9.1"
+appcompat="1.7.0"
+coreKtx="1.16.0"
+espressoCore="3.6.1"
+junit="4.13.2"
+kotlin = "2.1.0"
+composeBom = "2025.04.00"
+libvlcAll="4.0.0-eap2"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+compose-bom = { module = "androidx.compose:compose-bom" , version.ref = "composeBom"}
+compose-ui = { module = "androidx.compose.ui:ui"}
+compose-material = { module = "androidx.compose.material3:material3"}
+compose-preview = { module = "androidx.compose.ui:ui-tooling-preview"}
+compose-tooling = { module = "androidx.compose.ui:ui-tooling"}
+compose-activity = { module = "androidx.activity:activity-compose"}
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+junit = { module = "junit:junit", version.ref = "junit" }
+libvlc-all = { module = "org.videolan.android:libvlc-all", version.ref = "libvlcAll" }
+
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp"}
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
+

@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Rtspgrim"
-include ':app'
+include(":app")

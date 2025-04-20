@@ -1,113 +1,47 @@
 package com.grimgdl.rtspgrim
 
-
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.SurfaceHolder
-import android.view.ViewGroup
-
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import com.grimgdl.rtspgrim.databinding.MainActivityLayoutBinding
-import org.videolan.libvlc.LibVLC
-import org.videolan.libvlc.Media
-import org.videolan.libvlc.MediaPlayer
-
-
-class MainActivity: AppCompatActivity(), SurfaceHolder.Callback {
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.grimgdl.rtspgrim.ui.presentation.pages.MainScreen
+import com.grimgdl.rtspgrim.ui.theme.RtspTheme
 
 
-    private lateinit var mediaPlayer : MediaPlayer
-    private lateinit var vlc: LibVLC
+
+class MainActivity: ComponentActivity() {
 
 
-    @RequiresApi(Build.VERSION_CODES.R)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = MainActivityLayoutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        enableEdgeToEdge()
 
-        val vlcVideoLayout = binding.videoLayout
+        setContent {
 
-        val options = mutableListOf("-vvv")
-        options.add("--sout-transcode-vb=750")
+            RtspTheme {
 
-        options.add(String.format("--rtsp-user=%s", BuildConfig.USER))
-        options.add(String.format("--rtsp-pwd=%s", BuildConfig.PASS))
+                Scaffold { innerPadding ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ){
 
-        vlc = LibVLC(this, options)
-        mediaPlayer = MediaPlayer(vlc)
-        mediaPlayer.vlcVout.setVideoSurface(vlcVideoLayout.holder.surface,  vlcVideoLayout.holder)
+                        MainScreen()
+                    }
+                }
 
-
-        vlcVideoLayout.holder.addCallback(this)
-
-        val ivlcVout = mediaPlayer.vlcVout
-        //ivlcVout.setWindowSize(1280, 720)
-        ivlcVout.attachViews()
-
-
-        val connectionData = String.format("rtsp://%s:%s/cam/realmonitor?channel=1&subtype=0",
-             BuildConfig.HOST, BuildConfig.PORT)
-
-        val media = Media(vlc, Uri.parse(connectionData))
-
-
-        mediaPlayer.media = media
-        //media.release()
-
-        mediaPlayer.setEventListener {
-
-            binding.bitrate.post {
-                binding.bitrate.text = it.lengthChanged.toString()
             }
 
-        }
 
-
-        binding.play.setOnClickListener{
-            if (mediaPlayer.isPlaying) mediaPlayer.stop()
-            else mediaPlayer.play()
-
-            media.release()
         }
 
     }
-
-
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        mediaPlayer.release()
-        vlc.release()
-
-    }
-
-
-    override fun onStop() {
-        super.onStop()
-
-        mediaPlayer.stop()
-        mediaPlayer.detachViews()
-
-    }
-
-    override fun surfaceCreated(holder: SurfaceHolder) {
-
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        mediaPlayer.vlcVout.setWindowSize(width, height)
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
-
-    }
-
 
 }
