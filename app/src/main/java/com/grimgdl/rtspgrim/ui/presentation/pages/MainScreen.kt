@@ -1,6 +1,5 @@
 package com.grimgdl.rtspgrim.ui.presentation.pages
 
-import androidx.compose.material3.Badge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -21,8 +20,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val libVlc = remember{ LibVLC(context, listOf(
         "--no-osd",                        // No mostrar overlays (títulos, etc.)
         "--no-video-title-show",          // Quitar título de video al inicio
-        "--network-caching=150",          // Caché en red (milisegundos)
-        "--live-caching=100",             // Caché para streaming en vivo (milisegundos)
+        "--network-caching=20",          // Caché en red (milisegundos)
+        "--live-caching=20",             // Caché para streaming en vivo (milisegundos)
         "--file-caching=150",             // Por si se cae a fallback file stream
         "--clock-jitter=0",               // Eliminar jitter buffer (mejora latencia)
         "--clock-synchro=0",              // No sincroniza con reloj local (menos delay)
@@ -31,7 +30,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
         "--rtsp-user=${BuildConfig.USER}",
         "--rtsp-pwd=${BuildConfig.PASS}",
         "--rtsp-tcp",
-        "-vvv"
+        "-vvv",
+        "--no-media-library",
+        "--no-sub-autodetect-file",
+        "--no-xlib",
+        "--drop-late-frames",
+        "--no-spu",
+        "--no-audio",
+        "--rtsp-frame-buffer-size=0"
     ).toList()) }
     val mediaPlayer = remember{ MediaPlayer(libVlc) }
 

@@ -1,18 +1,16 @@
 package com.grimgdl.rtspgrim.ui.presentation.components
 
-import android.text.Layout
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,7 +59,7 @@ fun VlcPlayerView(player: MediaPlayer, media: Media,modifier: Modifier = Modifie
     player.setEventListener { event ->
         if (event is MediaPlayer.Event) {
             val bite = player.media?.stats?.demuxBitrate ?: 0f
-            bitrate = (bite * 1000).toInt()
+            bitrate = (bite * 1000 / 8).toInt()
         }
 
     }
